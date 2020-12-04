@@ -4,6 +4,7 @@ const scoreboardHelper = require('./scoreboardhelper.js');
 const driveHelper = require('./drivehelper.js');
 
 const weekNumber = '12';
+const outputDirectory = '/mnt/c/data/json/';
 
 console.log('Building Stats for Week ' + weekNumber);
 scoreboardHelper.loadScoreData(weekNumber, processScoreBoard);
@@ -50,12 +51,13 @@ async function buildItem(item) {
   .then(() => matchupHelper.getTurnovers(gameId).then(v => matchup.turnovers = v)).catch((error) => console.log(gameId + '-TURNOVER TOTALS: ' + error))
   .then(() => gamestats.matchup = matchup)
   .then(() => driveHelper.getBigPlays(gameId).then(v => gamestats.drives = v)).catch((error) => console.log(gameId + '-DRIVE SUMMARY: ' + error))
-  .then(() => writeToFile(gamestats));
+  .then(() => writeToFile(gamestats))
+  .then(() => console.log('FINISHED'));
 }
 
 function writeToFile(stats) {
   const fs = require('fs');
-  var filename = 'stats/' + stats.id + '.json';
+  var filename = outputDirectory + stats.id + '.json';
   console.log('WRITING TO FILE: ' + filename);
   fs.writeFile(filename, JSON.stringify(stats), function(err) {
     if (err) {
