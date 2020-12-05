@@ -26,6 +26,7 @@ async function loadScoreData(weekNumber, callback) {
 
       game.id = item.id;
       var j;
+      var teams = [];
       for (j = 0; j < competitors.length; j++) {
         var competitor = competitors[j];
         var competitorTeam = competitor.team;
@@ -36,13 +37,15 @@ async function loadScoreData(weekNumber, callback) {
         team.image = getFileName(competitorTeam.logo);
 
         if (competitor.homeAway == 'home') {
-          game.homeTeam = team;
+          team.type = 'home';
         } else {
-          game.visitorTeam = team;
+          team.type = 'away';
         }
-        game.weekNumber = weekNumber;
-        games.push(game);
+        teams.push(team);
       }
+      game.teams = teams;
+      game.weekNumber = weekNumber;        
+      games.push(game);
     }
     callback(games);
   };
