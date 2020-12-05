@@ -2,7 +2,7 @@ const client = require('axios');
 const cheerio = require('cheerio');
 
 async function loadGamePlays(gameId) {
-  const { data } = await client.get('https://www.espn.com/nfl/playbyplay?gameId=401220302');
+  const { data } = await client.get('https://www.espn.com/nfl/playbyplay?gameId=' + gameId);
   const gameplaysHtml = getHtml(data, '#gamepackage-drives-wrap');
   return gameplaysHtml;
 }
