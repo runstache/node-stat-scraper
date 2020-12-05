@@ -102,6 +102,7 @@ async function getRushingStats(gameId) {
   var stats = [];
 
   var away_stat = {};
+  away_stat.team = 'away';
   away_stat.totalRushingYards = getValue(totalRushing, 'td', 1);
   away_stat.totalAttempts = getValue(attempts, 'td', 1);
   away_stat.yardsPerRush = getValue(yrdsRush, 'td', 1);
@@ -109,6 +110,7 @@ async function getRushingStats(gameId) {
 
   
   var home_stat = {};
+  home_stat.team = 'home';
   home_stat.totalRushingYards = getValue(totalRushing, 'td', 2);
   home_stat.totalAttempts = getValue(attempts, 'td', 2);
   home_stat.yardsPerRush = getValue(yrdsRush, 'td', 2);
