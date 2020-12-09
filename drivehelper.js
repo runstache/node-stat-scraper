@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 
 async function loadGamePlays(gameId) {
   const { data } = await client.get('https://www.espn.com/nfl/playbyplay?gameId=' + gameId);
+  
   const gameplaysHtml = getHtml(data, '#gamepackage-drives-wrap');
   return gameplaysHtml;
 }
@@ -58,7 +59,7 @@ async function getBigPlays(gameId) {
       drive.logo = getImageName(imageValue);
 
       var driveTitle = getValue(header, 'span.headline');
-      if (driveTitle && (driveTitle.includes('Blocked') || driveTitle.includes('Downs') || driveTitle.includes('Missed'))) {
+      if (driveTitle && (driveTitle.toLowerCase().includes('blocked') || driveTitle.toLowerCase().includes('downs') || driveTitle.toLowerCase().includes('missed'))) {
         turnovers++;
       }
 
@@ -73,11 +74,11 @@ async function getBigPlays(gameId) {
       plays('li').each(function (idx, element) {
         var play = getValue(element, 'span.post-play');
         var yards = parseInt(getYardage(play));
-        if (yards > 0) {
-          if (play.includes(pass) && yards >= 15) {
+        if (yards > 0) {          
+          if (play.toLowerCase().includes('pass') && yards >= 15) {
             pass++;
           } else {
-            if (yards >= 10) {
+            if (!play.toLowerCase().includes('pass') && yards >= 10) {
               runs++;
             }
           }
@@ -111,16 +112,23 @@ function getImageName(url) {
 }
 
 function getYardage(playText) {
-  if (playText.includes('No Play') || playText.includes('PENALTY') || playText.includes('kick')) {
+  if (playText.toLowerCase().includes('no play') || playText.toLowerCase().includes('penalty') || playText.toLowerCase().includes('kick') || playText.toLowerCase().includes('punt')) {
     return 0;
   } else {
 
     var regex = /for \d+ yards/g;
+    var regex2 = /for \d+ yds/g;
     var matches = playText.match(regex);
+    var yardage = 0;
     if (matches && matches != null && matches.length > 0) {
-      var yardage = matches[0].replace('yards', '').replace('for', '');
+      yardage = matches[0].replace('yards', '').replace('for', '');
     } else {
-      return 0;
+      matches = playText.match(regex2);
+      if (matches && matches != null && matches.length > 0) {
+        yardage = matches[0].replace('yds', '').replace('for', '');
+      } else {
+        return 0;
+      }
     }
     return parseInt(yardage);
   }
