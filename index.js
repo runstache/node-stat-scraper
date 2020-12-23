@@ -3,8 +3,8 @@ const matchupHelper = require('./matchuphelper.js');
 const scoreboardHelper = require('./scoreboardhelper.js');
 const driveHelper = require('./drivehelper.js');
 
-const weekNumber = '12';
-const outputDirectory = '/mnt/c/data/json/';
+const weekNumber = '15';
+const outputDirectory = '/mnt/c/data/json/nfl/';
 
 console.log('Building Stats for Week ' + weekNumber);
 scoreboardHelper.loadScoreData(weekNumber, processScoreBoard);

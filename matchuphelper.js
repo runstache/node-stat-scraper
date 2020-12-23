@@ -1,4 +1,3 @@
-const { match } = require('assert');
 const client = require('axios');
 const cheerio = require('cheerio');
 const { stat } = require('fs');
